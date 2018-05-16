@@ -1,0 +1,25 @@
+server:
+  address: 0.0.0.0
+  port: 8080
+  context-path: /
+  display-name: VK data gatherer
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol_header: x-forwarded-proto
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/diploma
+    username: postgres
+    password: 14071996
+  http:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+  jpa:
+      hibernate:
+        ddl-auto: update
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
