@@ -41,12 +41,10 @@ public class VKAuthController {
     private String scope = "friends,photos,audio,video,stories,pages,status,notes,wall,offline,docs,groups,stats";
     //    private String userProfileUri = "https://oauth.vk.com/blank.html";
     TransportClient transportClient = HttpTransportClient.getInstance();
-    VkApiClient vk = new VkApiClient(transportClient);
+    @Autowired
+    VkApiClient vk;
+    public static UserActor actor;
 
-
-//    @Autowired
-//    @Qualifier("userService")
-//    private UserService userService;
 
     @RequestMapping(value = "/signin", method = RequestMethod.GET)
     public void vkLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -77,7 +75,7 @@ public class VKAuthController {
                     .userAuthorizationCodeFlow(Integer.parseInt(clientId), clientSecret,
                             redirectCallBackUri, code)
                     .execute();
-            UserActor actor = new UserActor(authResponse.getUserId(), authResponse.getAccessToken());
+            actor = new UserActor(authResponse.getUserId(), authResponse.getAccessToken());
             GetResponse getResponse = vk.wall().get(actor)
                     .ownerId(actor.getId())
                     .count(100)
