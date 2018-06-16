@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css?family=Julius+Sans+One');
+
+.wrapper {
+    margin-top: -20px;
+}
+
+.outer-row {
+    padding: 25px;
+    max-width: 99%;
+}
+
+.filter-container {
+    text-align: center;
+}
+
+.used-container {
+    width: 75vw;
+    border-radius: 20px;
+    background-color: rgba(177, 168, 179, 0.47);
+}
+
+.used-container > div > ul > li > div {
+    margin: 20px 0;
+}
+
+.used-container > div > ul > li {
+    margin-left: -28px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.item-img {
+    width: 500px;
+    max-height: 300px;
+    color: #d31212;
+    font-family: 'Julius Sans One', sans-serif;
+    font-weight: bolder;
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.item-background {
+    background: white;
+    padding: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    max-width: 97%;
+    margin-left: 15%;
+    border: solid 10px #e23521;
+}
+
+.model-name {
+    text-align: center;
+    font-size: 25px;
+    font-family: 'Julius Sans One', sans-serif;
+    font-weight: bold;
+    color: #e23521;
+}
+
+.item-details {
+    list-style-image: url('/images/icons/gears-icon-png-11.png');
+}
+
+.item-details-name {
+    font-weight: bolder;
+    font-size: 1.6em;
+    font-family: 'Julius Sans One', sans-serif;
+}
+
+.item-details-value {
+    font-weight: bold;
+    font-size: 1.2em;
+    font-family: 'Julius Sans One', sans-serif;
+}
+
+.relative {
+    position: relative;
+}
+
+.price {
+    background-color: #e23521;
+    display: inline-block;
+    border: solid 2px black;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.price > p {
+    color: black;
+    font-family: 'Julius Sans One', sans-serif;
+    font-weight: 900;
+}
+
+.instr-div {
+    text-align: center;
+    margin-top: 5%;
+}
+
+.instr-div > p {
+    color: black;
+    font-weight: bolder;
+    font-family: 'Julius Sans One', sans-serif;
+}
+
+.pagination {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+.pages {
+    color: white;
+    font-family: 'Julius Sans One', sans-serif;
+    font-weight: bolder;
+}
+
+.invis {
+    display: none;
+}
+
+@media only screen and (max-width: 768px) {
+
+    .item-details-name {
+        font-size: 1.2em;
+    }
+
+    .item-details-value {
+        font-size: 1em;
+    }
+
+    .price {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .item-background {
+        border: solid 4px #e23521;
+    }
+
+    .used-container {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .outer-row {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

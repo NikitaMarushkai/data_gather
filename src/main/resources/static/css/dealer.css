@@ -1,0 +1,35 @@
+.wrapper {
+    margin-top: -20px;
+    min-height: 90vh;
+}
+
+.head {
+    text-align: center;
+    color: whitesmoke;
+}
+
+.instr {
+    font-size: 18px;
+    text-align: center;
+    color: whitesmoke;
+}
+
+.container {
+    background: rgba(185, 177, 182, 0.53);
+    border-radius: 10px;
+}
+
+th {
+    color: #b42f2d;
+    font-weight: bolder;
+    font-size: 20px;
+}
+
+td {
+    color: black;
+    font-weight: bold;
+}
+
+.form-group {
+    max-width: 99%;
+}

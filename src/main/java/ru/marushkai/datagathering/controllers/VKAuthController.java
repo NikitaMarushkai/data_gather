@@ -125,7 +125,7 @@ public class VKAuthController {
 //        } catch (ExecutionException e) {
 //            e.printStackTrace();
 //        }
-        return null;
+        return "index";
     }
 }
 

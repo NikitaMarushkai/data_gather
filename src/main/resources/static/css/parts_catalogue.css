@@ -1,0 +1,53 @@
+.catalogue {
+    margin: 20px auto;
+    color: white;
+    background: rgba(0, 0, 0, 0.36);
+    font-family: "Myriad Pro";
+}
+
+.catalogue h1, h2 {
+    text-align: center;
+    font-weight: bold;
+}
+
+.catalogue h3 {
+    font-size: 30px;
+    text-decoration: underline;
+}
+
+.catalogue li {
+    margin: 5px auto;
+    font-size: 17px;
+}
+
+.outset {
+    border: 10px outset #d2e3ed;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.link p {
+    font-family: "Myriad Pro";
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.36);
+    border-radius: 10px;
+}
+
+.head {
+    text-align: center;
+    font-family: "Myriad Pro";
+    font-weight: bold;
+    color: white;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 900px) {
+    .form-horizontal .form-group {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
