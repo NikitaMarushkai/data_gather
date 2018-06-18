@@ -196,7 +196,7 @@ public class UserService {
                 personal.setVkUser(user);
                 personal.setAlcohol(u.getPersonal().getAlcohol());
                 personal.setInspiredBy(u.getPersonal().getInspiredBy());
-                personal.setLangs(u.getPersonal().getLangs());
+                personal.setLangs(u.getPersonal().getLangs().toArray(new String[]{}));
                 personal.setLifeMain(u.getPersonal().getLifeMain());
                 personal.setPeopleMain(u.getPersonal().getPeopleMain());
                 personal.setPolitical(u.getPersonal().getPolitical());

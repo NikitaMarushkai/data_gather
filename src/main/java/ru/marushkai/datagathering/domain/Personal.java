@@ -28,7 +28,7 @@ public class Personal {
     private Integer political;
 
     @Column(length = 5000)
-    private List<String> langs;
+    private String[] langs;
 
     @Column(length = 5000)
     private String religion;
