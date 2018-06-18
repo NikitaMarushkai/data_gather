@@ -33,8 +33,10 @@ public class Subscriptions {
 
     private Long groupId;
 
+    @Column(length = 5000)
     private String groupName;
 
+    @Column(length = 5000)
     private String groupGenre;
 
     private Boolean isQuoted;

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/collect/parse}" method="get" class="form-horizontal">
+    <p>
+        <select name="group" multiple size="5">
+            <option th:each="item : ${groups}" th:value="${item.groupId}" th:text="${item.groupName}"></option>
+        </select>
+    </p>
+    <br/>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

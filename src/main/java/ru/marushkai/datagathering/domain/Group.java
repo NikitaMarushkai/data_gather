@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "group")
+@Table(name = "user_group")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -22,5 +22,7 @@ public class Group {
     @GeneratedValue
     private Long id;
 
-    private String group_id;
+    private String groupId;
+
+    private String groupName;
 }

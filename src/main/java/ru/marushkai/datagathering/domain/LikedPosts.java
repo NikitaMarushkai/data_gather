@@ -28,5 +28,6 @@ public class LikedPosts {
     @JoinColumn(name = "group_id", nullable = true)
     private Subscriptions subscriptions;
 
+    @Column(length = 5000)
     private String postContent;
 }

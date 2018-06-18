@@ -24,13 +24,14 @@ public class Military {
     @JoinColumn(name = "user_id", nullable = false)
     private VKUser vkUser;
 
+    @Column(length = 5000)
     private String unit;
 
     private Integer unitId;
 
     private Integer countryId;
 
-    private Integer from;
+    private Integer year_from;
 
-    private Integer until;
+    private Integer year_until;
 }

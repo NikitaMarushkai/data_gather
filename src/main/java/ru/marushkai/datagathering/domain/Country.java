@@ -26,5 +26,5 @@ public class Country {
 
     private Integer countryId;
 
-    private Integer countryName;
+    private String countryName;
 }

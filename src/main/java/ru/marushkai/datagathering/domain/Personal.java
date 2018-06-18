@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "personal")
@@ -26,10 +27,13 @@ public class Personal {
 
     private Integer political;
 
-    private String langs;
+    @Column(length = 5000)
+    private List<String> langs;
 
+    @Column(length = 5000)
     private String religion;
 
+    @Column(length = 5000)
     private String inspiredBy;
 
     private Integer peopleMain;

@@ -25,8 +25,10 @@ public class AnalysisResult {
 
     private Boolean isInterestedInEdu;
 
+    @Column(length = 5000)
     private String knowledgeSpectre;
 
+    @Column(length = 5000)
     private String nonEduInterests;
 
     private Boolean isConflict;

@@ -14,33 +14,27 @@ import java.util.List;
 
 @Service
 public class GroupService {
-    // MDK, Лентач, Мемы про машинное обучение, КИномания, Science|Наука
     @Autowired
     VkApiClient vk;
 
-    //    GetResponse getResponse = vk.wall().get(actor)
-//            .ownerId(actor.getId())
-//            .count(100)
-//            .offset(5)
-//            .filter(WallGetFilter.OWNER)
-//            .execute();
-//            getResponse.getItems().forEach(it -> System.out.println(it.getComments().toString()));
-    public List<String> getUserIdsFromGroup(String groupId) {
+    public List<String> getUserIdsFromGroup(String[] groupId) {
         List<String> members = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
-            try {
-                GetMembersResponse getResponse = vk.groups().getMembers(VKAuthController.actor)
-                        .groupId(groupId)
-                        .offset(1000 * i)
-                        .execute();
-                getResponse.getItems().forEach(item -> members.add(item.toString()));
-                Thread.sleep(300);
-            } catch (ApiException e) {
-                e.printStackTrace();
-            } catch (ClientException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        for (int j = 0; j < groupId.length; j++) {
+            for (int i = 0; i < 1; i++) {
+                try {
+                    GetMembersResponse getResponse = vk.groups().getMembers(VKAuthController.actor)
+                            .groupId(groupId[j])
+                            .offset(1000 * i)
+                            .execute();
+                    getResponse.getItems().forEach(item -> members.add(item.toString()));
+                    Thread.sleep(300);
+                } catch (ApiException e) {
+                    e.printStackTrace();
+                } catch (ClientException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return members;

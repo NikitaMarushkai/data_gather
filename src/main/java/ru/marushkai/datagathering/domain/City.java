@@ -26,6 +26,7 @@ public class City {
 
     private Integer cityId;
 
+    @Column(length = 5000)
     private String cityName;
 
 }

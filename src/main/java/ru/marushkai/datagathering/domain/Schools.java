@@ -24,11 +24,11 @@ public class Schools {
     @JoinColumn(name = "user_id", nullable = false)
     private VKUser vkUser;
 
-    private Long schoolId;
+    private String schoolId;
 
-    private Long countryId;
+    private Integer countryId;
 
-    private Long cityId;
+    private Integer cityId;
 
     private String schoolName;
 
@@ -38,9 +38,10 @@ public class Schools {
 
     private Integer yearGraduated;
 
+    @Column(length = 5000)
     private String classLetter;
 
-    private String speciality;
 
+    @Column(length = 5000)
     private String type;
 }

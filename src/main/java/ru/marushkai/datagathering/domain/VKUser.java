@@ -20,15 +20,21 @@ public class VKUser {
     @GeneratedValue
     private Long id;
 
-    private Long vkId;
+    private Integer vkId;
 
+    @Column(length = 1024)
     private String firstName;
+    @Column(length = 1024)
     private String lastName;
 
     //From documentation
+    @Column(length = 5000)
     private String about;
+    @Column(length = 5000)
     private String activities;
+    @Column(length = 5000)
     private String bdate;
+    @Column(length = 5000)
     private String books;
 
     @OneToMany(mappedBy = "vkUser")
@@ -37,6 +43,7 @@ public class VKUser {
     @OneToMany(mappedBy = "vkUser")
     private Set<City> city;
 
+    @Column(length = 5000)
     private String connections;
 
     @OneToMany(mappedBy = "vkUser")
@@ -52,14 +59,18 @@ public class VKUser {
     @OneToMany(mappedBy = "vkUser")
     private Set<Education> education;
 
+    @Column(length = 5000)
     private String homeTown;
+    @Column(length = 5000)
     private String interests;
     private Integer last_seen;
 
     @OneToMany(mappedBy = "vkUser")
     private Set<Military> military;
 
+    @Column(length = 5000)
     private String movies;
+    @Column(length = 5000)
     private String music;
 
     @OneToMany(mappedBy = "vkUser")
@@ -128,8 +139,9 @@ public class VKUser {
     private Set<Schools> schools;
 
 
-    private boolean sex;
-    private boolean trending; //информация о том, есть ли на странице пользователя «огонёк».
+    private Integer sex;
+    private Boolean trending; //информация о том, есть ли на странице пользователя «огонёк».
+    @Column(length = 5000)
     private String tv;
     private Boolean verified;
 

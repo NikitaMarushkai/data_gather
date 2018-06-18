@@ -24,9 +24,8 @@ public class Relatives {
     @JoinColumn(name = "user_id", nullable = false)
     private VKUser vkUser;
 
-    private Long relativeId;
+    private Integer relativeId;
 
+    @Column(length = 5000)
     private String relativeName;
-
-    private Integer type;
 }

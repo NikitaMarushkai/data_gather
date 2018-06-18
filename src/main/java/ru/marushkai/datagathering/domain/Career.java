@@ -23,19 +23,19 @@ public class Career {
     @JoinColumn(name = "user_id", nullable = false)
     private VKUser vkUser;
 
-    private Long groupId;
+    private Integer groupId;
 
+    @Column(length = 5000)
     private String company;
 
     private Integer country_id;
 
     private Integer city_id;
 
-    private String city_name;
+    private Integer year_from;
 
-    private Integer from;
+    private Integer year_until;
 
-    private Integer until;
-
+    @Column(length = 5000)
     private String position;
 }

@@ -76,72 +76,11 @@ public class VKAuthController {
                             redirectCallBackUri, code)
                     .execute();
             actor = new UserActor(authResponse.getUserId(), authResponse.getAccessToken());
-            GetResponse getResponse = vk.wall().get(actor)
-                    .ownerId(actor.getId())
-                    .count(100)
-                    .offset(5)
-                    .filter(WallGetFilter.OWNER)
-                    .execute();
-            getResponse.getItems().forEach(it -> System.out.println(it.getComments().toString()));
         } catch (ApiException e) {
             e.printStackTrace();
         } catch (ClientException e) {
             e.printStackTrace();
         }
-//        final OAuth20Service service = new ServiceBuilder(clientId)
-//                .apiKey(clientId)
-//                .apiSecret(clientSecret)
-//                .callback(redirectCallBackUri)
-//                .build(VkontakteApi.instance());
-//
-//
-//        final Verifier verifier = new Verifier();
-//        OAuth2AccessToken accessToken = null;
-//        try {
-//            accessToken = service.getAccessToken(code);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//
-//        final OAuthRequest oauthRequest = new OAuthRequest(Verb.GET, userProfileUri);
-//        service.signRequest(accessToken, oauthRequest);
-//
-//        final Response resourceResponse;
-//        try {
-//            resourceResponse = service.execute(oauthRequest);
-//            final JSONObject obj = new JSONObject(resourceResponse.getBody());
-//
-//            final String userId = obj.getString("uid");
-//            final String first_name = obj.getString("first_name");
-//            final String last_name = obj.getString("last_name");
-//
-//            System.out.println(userId);
-//            System.out.println(first_name);
-//            System.out.println(last_name);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
         return "index";
     }
 }
-
-//        if (userService.findOne(Long.parseLong(userId)) != null) {
-//            request.getSession().setAttribute("VK_ACCESS_TOKEN", accessToken);
-//            model.addAttribute("user", userService.findOne(Long.parseLong(userId)));
-//            final Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            if (user instanceof User) {
-//                return "account";
-//            } else {
-//                return "/personalarea";
-//            }
-//        } else {
-//            final User user = new User();
-//            user.setFirst_name(first_name);
-//            user.setLast_name(last_name);
-//            model.addAttribute("user", user);
-//            return "/registration";
-//        }

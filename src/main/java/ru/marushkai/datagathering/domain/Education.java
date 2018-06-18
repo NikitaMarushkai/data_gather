@@ -25,10 +25,12 @@ public class Education {
 
     private Integer university;
 
+    @Column(length = 5000)
     private String universityName;
 
     private Integer faculty;
 
+    @Column(length = 5000)
     private String facultyName;
 
     private Integer graduation;
