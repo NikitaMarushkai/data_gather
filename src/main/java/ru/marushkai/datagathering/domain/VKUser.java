@@ -129,7 +129,9 @@ public class VKUser {
  3 — компромиссное;
  4 — нейтральное;
  5 — положительное.*/
+    @Column(length = 5000)
     private String photoId;
+    @Column(length = 5000)
     private String quotes;
 
     @OneToMany(mappedBy = "vkUser")

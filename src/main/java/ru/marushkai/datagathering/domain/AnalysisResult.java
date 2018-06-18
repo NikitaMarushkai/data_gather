@@ -35,5 +35,5 @@ public class AnalysisResult {
 
     private Boolean realExperience;
 
-    private Integer readyToProvideInfo;
+    private Double readyToProvideInfo;
 }

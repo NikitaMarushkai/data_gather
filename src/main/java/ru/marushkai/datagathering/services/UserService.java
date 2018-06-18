@@ -1,9 +1,14 @@
 package ru.marushkai.datagathering.services;
 
+import com.vk.api.sdk.actions.Wall;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
+import com.vk.api.sdk.objects.groups.GroupFull;
 import com.vk.api.sdk.objects.users.UserXtrCounters;
+import com.vk.api.sdk.objects.wall.WallPostFull;
+import com.vk.api.sdk.queries.EnumParam;
+import com.vk.api.sdk.queries.groups.GroupField;
 import com.vk.api.sdk.queries.users.UserField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,27 +71,84 @@ public class UserService {
         return users;
     }
 
-//    private List getUserSubscriptions(VKUser vkUser) {
-//        vk.groups().get
-//    }
+    private List<GroupFull> getUserSubscriptions(VKUser vkUser) {
+        List<GroupFull> groupFulls = new ArrayList<>();
+        try {
+            groupFulls.addAll(vk.groups().getExtended(VKAuthController.actor)
+                    .userId(vkUser.getVkId())
+                    .fields(GroupField.STATUS, GroupField.DESCRIPTION, GroupField.SCREEN_NAME)
+                    .count(1000)
+                    .execute().getItems());
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return groupFulls;
+    }
 
-//    private List getUserWallPosts(VKUser vkUser) {
-//
+    private List<WallPostFull> getUserWallPosts(VKUser vkUser) {
+        List<WallPostFull> wallPostFulls = new ArrayList<>();
+        try {
+            wallPostFulls.addAll(vk.wall().getExtended(VKAuthController.actor)
+                    .ownerId(vkUser.getVkId())
+                    .count(50)
+                    .execute().getItems());
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+    }
+
+//    private Set<LikedPosts> getUserLikedPost(VKUser vkUser) {
+////        Text text = new Text("")
+//        try {
+//            vk.fave().getPosts(VKAuthController.actor)
+//                    .count(100)
+//                    .offset(0)
+//                    .extended(true)
+//                    .execute();
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//        } catch (ClientException e) {
+//            e.printStackTrace();
+//        }
 //    }
 
     @Transactional
     public void saveUsers(List<String> userIds) {
         List<UserXtrCounters> users = getUserInfoById(userIds);
         users.forEach(u -> {
+            Integer fieldsFilled = 0;
             VKUser user = new VKUser();
             user.setVkId(u.getId());
-            user.setFirstName(u.getFirstName());
-            user.setLastName(u.getLastName());
-            user.setAbout(u.getAbout());
-            user.setActivities(u.getActivities());
-            user.setBdate(u.getBdate());
-            user.setBooks(u.getBooks());
+            if (u.getFirstName() != null) {
+                fieldsFilled++;
+                user.setFirstName(u.getFirstName());
+            }
+            if (u.getLastName() != null) {
+                fieldsFilled++;
+                user.setLastName(u.getLastName());
+            }
+            if (u.getAbout() != null) {
+                fieldsFilled++;
+                user.setAbout(u.getAbout());
+            }
+            if (u.getActivities() != null) {
+                fieldsFilled++;
+                user.setActivities(u.getActivities());
+            }
+            if (u.getBdate() != null) {
+                fieldsFilled++;
+                user.setBdate(u.getBdate());
+            }
+            if (u.getBooks() != null) {
+                fieldsFilled++;
+                user.setBooks(u.getBooks());
+            }
             if (u.getCareer() != null) {
+                fieldsFilled++;
                 user.setCareer(u.getCareer().stream().map(career -> {
                     Career userCareer = new Career();
                     userCareer.setVkUser(user);
@@ -101,6 +163,7 @@ public class UserService {
                 }).collect(Collectors.toSet()));
             }
             if (u.getCity() != null) {
+                fieldsFilled++;
                 Set<City> citySet = new HashSet<>();
                 City city = new City();
                 city.setCityId(u.getCity().getId());
@@ -109,17 +172,27 @@ public class UserService {
                 citySet.add(city);
                 user.setCity(citySet);
             }
-            user.setConnections(u.getFacebookName());
+            if (u.getFacebookName() != null) {
+                fieldsFilled++;
+                user.setConnections(u.getFacebookName());
+            }
 
             Set<Contacts> contacts = new HashSet<>();
             Contacts contacts1 = new Contacts();
             contacts1.setVkUser(user);
-            contacts1.setHomePhone(u.getHomePhone());
-            contacts1.setMobilePhone(u.getMobilePhone());
+            if (u.getHomePhone() != null) {
+                fieldsFilled++;
+                contacts1.setHomePhone(u.getHomePhone());
+            }
+            if (u.getMobilePhone() != null) {
+                fieldsFilled++;
+                contacts1.setMobilePhone(u.getMobilePhone());
+            }
             contacts.add(contacts1);
             user.setContacts(contacts);
 
             if (u.getCounters() != null) {
+                fieldsFilled++;
                 Counters counters = new Counters();
                 counters.setAlbums(u.getCounters().getAlbums());
                 counters.setAudios(u.getCounters().getAudios());
@@ -137,6 +210,7 @@ public class UserService {
             }
 
             if (u.getCountry() != null) {
+                fieldsFilled++;
                 Set<Country> countries = new HashSet<>();
                 Country country = new Country();
                 country.setCountryId(u.getCountry().getId());
@@ -147,6 +221,7 @@ public class UserService {
             }
 
             if (u.getUniversities() != null) {
+                fieldsFilled++;
                 user.setEducation(u.getUniversities().stream().map(university -> {
                     Education userEdu = new Education();
                     userEdu.setFaculty(u.getFaculty());
@@ -159,13 +234,20 @@ public class UserService {
                 }).collect(Collectors.toSet()));
             }
 
-            user.setHomeTown(u.getHomeTown());
-            user.setInterests(u.getInterests());
+            if (u.getHomeTown() != null) {
+                fieldsFilled++;
+                user.setHomeTown(u.getHomeTown());
+            }
+            if (u.getInterests() != null) {
+                fieldsFilled++;
+                user.setInterests(u.getInterests());
+            }
             if (u.getLastSeen() != null) {
                 user.setLast_seen(u.getLastSeen().getTime());
             }
 
             if (u.getMilitary() != null) {
+                fieldsFilled++;
                 user.setMilitary(u.getMilitary().stream().map(military -> {
                     Military userMil = new Military();
                     userMil.setVkUser(user);
@@ -178,10 +260,17 @@ public class UserService {
                 }).collect(Collectors.toSet()));
             }
 
-            user.setMovies(u.getMovies());
-            user.setMusic(u.getMusic());
+            if (u.getMovies() != null) {
+                fieldsFilled++;
+                user.setMovies(u.getMovies());
+            }
+            if (u.getMusic() != null) {
+                fieldsFilled++;
+                user.setMusic(u.getMusic());
+            }
 
             if (u.getOccupation() != null) {
+                fieldsFilled++;
                 Set<Occupation> occupations = new HashSet<>();
                 Occupation occupation = new Occupation();
                 occupation.setVkUser(user);
@@ -192,11 +281,14 @@ public class UserService {
             }
 
             if (u.getPersonal() != null) {
+                fieldsFilled += 3;
                 Personal personal = new Personal();
                 personal.setVkUser(user);
                 personal.setAlcohol(u.getPersonal().getAlcohol());
                 personal.setInspiredBy(u.getPersonal().getInspiredBy());
-                personal.setLangs(u.getPersonal().getLangs().toArray(new String[]{}));
+                if (u.getPersonal().getLangs() != null) {
+                    personal.setLangs(u.getPersonal().getLangs().toArray(new String[]{}));
+                }
                 personal.setLifeMain(u.getPersonal().getLifeMain());
                 personal.setPeopleMain(u.getPersonal().getPeopleMain());
                 personal.setPolitical(u.getPersonal().getPolitical());
@@ -205,10 +297,17 @@ public class UserService {
                 user.setPersonal(personal);
             }
 
-            user.setPhotoId(u.getPhotoId());
-            user.setQuotes(u.getQuotes());
+            if (u.getPhotoId() != null) {
+                fieldsFilled++;
+                user.setPhotoId(u.getPhotoId());
+            }
+            if (u.getQuotes() != null) {
+                fieldsFilled++;
+                user.setQuotes(u.getQuotes());
+            }
 
             if (u.getRelatives() != null) {
+                fieldsFilled++;
                 user.setRelatives(u.getRelatives().stream().map(relative -> {
                     Relatives relatives = new Relatives();
                     relatives.setVkUser(user);
@@ -219,6 +318,7 @@ public class UserService {
             }
 
             if (u.getSchools() != null) {
+                fieldsFilled += 3;
                 user.setSchools(u.getSchools().stream().map(school -> {
                     Schools schools = new Schools();
                     schools.setVkUser(user);
@@ -235,25 +335,98 @@ public class UserService {
             }
 
             if (u.getSex() != null) {
+                fieldsFilled++;
                 user.setSex(u.getSex().getValue());
             }
+
             user.setTrending(u.isTrending());
-            user.setTv(u.getTv());
+
+            if (u.getTv() != null) {
+                fieldsFilled++;
+                user.setTv(u.getTv());
+            }
             user.setVerified(u.isVerified());
 
 
+            List<GroupFull> userSubscription = getUserSubscriptions(user);
+
+            if (!userSubscription.isEmpty()) {
+                user.setSubscriptions(userSubscription.stream().map(subscr -> {
+                    Subscriptions subscriptions = new Subscriptions();
+                    subscriptions.setGroupId(subscr.getId());
+                    subscriptions.setGroupName(subscr.getScreenName());
+                    subscriptions.setGroupStatus(subscr.getStatus());
+                    subscriptions.setGroupDescription(subscr.getDescription());
+                    subscriptions.setVkUser(user);
+//                    subscriptions.set
+//                    subscriptions.setIsQuoted();
+                    return subscriptions;
+                }).collect(Collectors.toSet()));
+            }
+
+            List<WallPostFull> wallPosts = getUserWallPosts(user);
+
+            if (!wallPosts.isEmpty()) {
+                user.setWallPosts(wallPosts.stream().map(post -> {
+                    WallPosts wallPost = new WallPosts();
+                    wallPost.setVkUser(user);
+                    wallPost.setPostContent(post.getText());
+                    post.getSignerId()
+                    wallPost.setSubscriptions(userSubscription.forEach(it -> it.getId););
+                }));
+            }
+
+            AnalysisResult result = new AnalysisResult();
+            result.setReadyToProvideInfo(user.getClass().getDeclaredFields().length / fieldsFilled.doubleValue() * 100);
+            String obviousInterests = "";
+            if (user.getMusic() != null) {
+                obviousInterests += "Музыка: " + user.getMusic() + " ;";
+            }
+            if (user.getBooks() != null) {
+                obviousInterests += "Книги: " + user.getBooks() + " ;";
+            }
+            if (user.getTv() != null) {
+                obviousInterests += "Телепередачи: " + user.getTv() + " ;";
+            }
+            if (user.getMovies() != null) {
+                obviousInterests += "Фильмы: " + user.getMovies() + " ;";
+            }
+//            result.setNonEduInterests();
+
             vkUserRepository.save(user);
-            careerRepository.save(user.getCareer());
-            cityRepository.save(user.getCity());
-            contactsRepository.save(user.getContacts());
-            countersRepository.save(user.getCounters());
-            countryRepository.save(user.getCountry());
-            educationRepositroy.save(user.getEducation());
-            militaryRepository.save(user.getMilitary());
-            occupationRepository.save(user.getOccupation());
-            personalRepositroy.save(user.getPersonal());
-            relativesRepository.save(user.getRelatives());
-            schoolsRepository.save(user.getSchools());
+            if (user.getCareer() != null) {
+                careerRepository.save(user.getCareer());
+            }
+            if (user.getCity() != null) {
+                cityRepository.save(user.getCity());
+            }
+            if (user.getContacts() != null) {
+                contactsRepository.save(user.getContacts());
+            }
+            if (user.getCounters() != null) {
+                countersRepository.save(user.getCounters());
+            }
+            if (user.getCountry() != null) {
+                countryRepository.save(user.getCountry());
+            }
+            if (user.getEducation() != null) {
+                educationRepositroy.save(user.getEducation());
+            }
+            if (user.getMilitary() != null) {
+                militaryRepository.save(user.getMilitary());
+            }
+            if (user.getOccupation() != null) {
+                occupationRepository.save(user.getOccupation());
+            }
+            if (user.getPersonal() != null) {
+                personalRepositroy.save(user.getPersonal());
+            }
+            if (user.getRelatives() != null) {
+                relativesRepository.save(user.getRelatives());
+            }
+            if (user.getSchools() != null) {
+                schoolsRepository.save(user.getSchools());
+            }
         });
     }
 }

@@ -26,5 +26,6 @@ public class Country {
 
     private Integer countryId;
 
+    @Column(length = 5000)
     private String countryName;
 }

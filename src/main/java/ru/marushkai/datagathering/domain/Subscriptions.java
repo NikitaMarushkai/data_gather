@@ -31,13 +31,16 @@ public class Subscriptions {
     @OneToMany(mappedBy = "subscriptions")
     private Set<LikedPosts> likedPosts;
 
-    private Long groupId;
+    private Integer groupId;
 
     @Column(length = 5000)
     private String groupName;
 
     @Column(length = 5000)
-    private String groupGenre;
+    private String groupDescription;
+
+    @Column(length = 5000)
+    private String groupStatus;
 
     private Boolean isQuoted;
 

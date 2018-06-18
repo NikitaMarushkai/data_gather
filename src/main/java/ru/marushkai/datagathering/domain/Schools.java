@@ -24,6 +24,7 @@ public class Schools {
     @JoinColumn(name = "user_id", nullable = false)
     private VKUser vkUser;
 
+    @Column(length = 5000)
     private String schoolId;
 
     private Integer countryId;
