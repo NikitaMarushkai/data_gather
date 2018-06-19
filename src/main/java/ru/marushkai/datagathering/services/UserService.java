@@ -447,9 +447,82 @@ public class UserService {
                 return group;
             }).collect(Collectors.joining("\n--------------\n")));
 
+            Set<String> eduKeywords = new HashSet<>();
+            eduKeywords.add("школ");
+            eduKeywords.add("университ");
+            eduKeywords.add("инстит");
+            eduKeywords.add("вуз");
+            eduKeywords.add("образов");
+            eduKeywords.add("учен");
+            eduKeywords.add("олимпиад");
+            eduKeywords.add("поступлен");
+            eduKeywords.add("учеб");
+            Set<String> knowledgeTechnicalKeywords = new HashSet<>();
+            knowledgeTechnicalKeywords.add("электр");
+            knowledgeTechnicalKeywords.add("нано");
+            knowledgeTechnicalKeywords.add("вибр");
+            knowledgeTechnicalKeywords.add("спец");
+            knowledgeTechnicalKeywords.add("инструм");
+            knowledgeTechnicalKeywords.add("авто");
+            knowledgeTechnicalKeywords.add("it");
+            knowledgeTechnicalKeywords.add("информ");
+            knowledgeTechnicalKeywords.add("техн");
+            knowledgeTechnicalKeywords.add("визуализ");
+            knowledgeTechnicalKeywords.add("программ");
+            knowledgeTechnicalKeywords.add("математик");
+            knowledgeTechnicalKeywords.add("исследован");
+            knowledgeTechnicalKeywords.add("физик");
+            knowledgeTechnicalKeywords.add("физич");
+            Set<String> knowledgeHumanKeywords = new HashSet<>();
+            knowledgeHumanKeywords.add("литератур");
+            knowledgeHumanKeywords.add("музык");
+            knowledgeHumanKeywords.add("театр");
+            knowledgeHumanKeywords.add("соц");
+            knowledgeHumanKeywords.add("опрос");
+            knowledgeHumanKeywords.add("фильм");
+            knowledgeHumanKeywords.add("кино");
+            knowledgeHumanKeywords.add("искусств");
+            knowledgeHumanKeywords.add("истор");
+            knowledgeHumanKeywords.add("культур");
+            knowledgeHumanKeywords.add("религ");
+            knowledgeHumanKeywords.add("поэт");
+            knowledgeHumanKeywords.add("поэз");
+            knowledgeHumanKeywords.add("педагог");
+
+            eduKeywords.forEach(keyword -> {
+                if (user.getWallPosts().stream()
+                        .map(WallPosts::getPostContent)
+                        .collect(Collectors.joining(";")).contains(keyword)) {
+                    result.setIsInterestedInEdu(true);
+                }
+            });
+
+            Integer techOccurences = 0;
+            for (String keyword : knowledgeTechnicalKeywords) {
+                if (user.getWallPosts().stream()
+                        .map(WallPosts::getPostContent)
+                        .collect(Collectors.joining(";")).contains(keyword)) {
+                    techOccurences++;
+                }
+            }
+
+            Integer humanOccurences = 0;
+            for (String keyword : knowledgeHumanKeywords) {
+                if (user.getWallPosts().stream()
+                        .map(WallPosts::getPostContent)
+                        .collect(Collectors.joining(";")).contains(keyword)) {
+                    humanOccurences++;
+                }
+            }
+
+            Integer totalOccurences = humanOccurences + techOccurences;
+
+            Double humanPercentage = humanOccurences / totalOccurences * 100.0;
+            Double techPercentage = techOccurences / totalOccurences * 100.0;
+
+            result.setKnowledgeSpectre("Процент технической заинтересованности: " + techPercentage + "; " +
+                    "Процент гуманитарной заинтересованности: " + humanPercentage);
             /*
-            1. Заполнить заинтереcованность в образовании
-            2. Заполнить спектр знаний
             3. Заполнить конфликтность
             4. Заполнить реальный опыт
              */
