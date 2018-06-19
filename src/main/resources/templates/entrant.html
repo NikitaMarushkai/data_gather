@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form th:action="@{/entrant/data}" th:method="get">
+    <label for="fio">Введите имя фамилию и отчество абитуриента, по которому нужно получить данные</label>
+    <input type="text" name="fio" id="fio"/>
+    <input type="submit" value="Запросить данные"/>
+</form>
+
+</body>
+</html>
