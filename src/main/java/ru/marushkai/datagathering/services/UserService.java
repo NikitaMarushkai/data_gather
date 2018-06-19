@@ -152,7 +152,6 @@ public class UserService {
 //        }
 //    }
 
-    @Transactional
     public void saveUsers(List<String> userIds) {
         List<UserXtrCounters> users = getUserInfoById(userIds);
         users.forEach(u -> {
@@ -443,19 +442,19 @@ public class UserService {
             //Analysis results region
             AnalysisResult result = new AnalysisResult();
             result.setVkUser(user);
-            result.setReadyToProvideInfo(user.getClass().getDeclaredFields().length / fieldsFilled.doubleValue() * 100);
+            result.setReadyToProvideInfo(fieldsFilled.doubleValue() / user.getClass().getDeclaredFields().length * 100);
             String obviousInterests = "";
             if (user.getMusic() != null) {
-                obviousInterests += "Музыка: " + user.getMusic() + " ;";
+                obviousInterests += "Музыка: " + user.getMusic() + "; ";
             }
             if (user.getBooks() != null) {
-                obviousInterests += "Книги: " + user.getBooks() + " ;";
+                obviousInterests += "Книги: " + user.getBooks() + "; ";
             }
             if (user.getTv() != null) {
-                obviousInterests += "Телепередачи: " + user.getTv() + " ;";
+                obviousInterests += "Телепередачи: " + user.getTv() + "; ";
             }
             if (user.getMovies() != null) {
-                obviousInterests += "Фильмы: " + user.getMovies() + " ;";
+                obviousInterests += "Фильмы: " + user.getMovies() + "; ";
             }
             result.setNonEduInterests(obviousInterests);
 
@@ -545,6 +544,7 @@ public class UserService {
                 result.setKnowledgeSpectre("Процент технической заинтересованности: " + techPercentage + "; " +
                         "Процент гуманитарной заинтересованности: " + humanPercentage);
             }
+            user.setAnalysisResult(result);
             /*
             3. Заполнить конфликтность
             4. Заполнить реальный опыт
