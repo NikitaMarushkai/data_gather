@@ -24,11 +24,11 @@ public class Occupation {
     @JoinColumn(name = "user_id", nullable = false)
     private VKUser vkUser;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String type;
 
     private Integer occupationId;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String occupationName;
 }

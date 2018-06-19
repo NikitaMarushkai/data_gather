@@ -27,13 +27,13 @@ public class Personal {
 
     private Integer political;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String[] langs;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String religion;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String inspiredBy;
 
     private Integer peopleMain;

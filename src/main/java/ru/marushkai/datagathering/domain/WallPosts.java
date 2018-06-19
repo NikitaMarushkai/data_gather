@@ -28,7 +28,7 @@ public class WallPosts {
     @JoinColumn(name = "post_origin", nullable = true)
     private Subscriptions subscriptions;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String postContent;
 }
 

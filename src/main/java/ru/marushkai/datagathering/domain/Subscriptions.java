@@ -33,13 +33,13 @@ public class Subscriptions {
 
     private Integer groupId;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String groupName;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String groupDescription;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String groupStatus;
 
     private Boolean isQuoted;

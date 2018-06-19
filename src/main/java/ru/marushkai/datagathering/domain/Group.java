@@ -19,9 +19,9 @@ public class Group {
     @GeneratedValue
     private Long id;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String groupId;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String groupName;
 }

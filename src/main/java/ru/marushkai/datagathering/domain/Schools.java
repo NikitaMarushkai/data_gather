@@ -24,7 +24,7 @@ public class Schools {
     @JoinColumn(name = "user_id", nullable = false)
     private VKUser vkUser;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String schoolId;
 
     private Integer countryId;
@@ -39,10 +39,10 @@ public class Schools {
 
     private Integer yearGraduated;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String classLetter;
 
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String type;
 }

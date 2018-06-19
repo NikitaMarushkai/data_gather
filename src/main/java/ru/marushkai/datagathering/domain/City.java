@@ -26,7 +26,7 @@ public class City {
 
     private Integer cityId;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String cityName;
 
 }

@@ -24,9 +24,9 @@ public class Contacts {
     @JoinColumn(name = "user_id", nullable = false)
     private VKUser vkUser;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String mobilePhone;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String homePhone;
 }

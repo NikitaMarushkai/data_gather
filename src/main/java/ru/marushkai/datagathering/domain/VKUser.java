@@ -28,13 +28,13 @@ public class VKUser {
     private String lastName;
 
     //From documentation
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String about;
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String activities;
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String bdate;
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String books;
 
     @OneToMany(mappedBy = "vkUser")
@@ -43,7 +43,7 @@ public class VKUser {
     @OneToMany(mappedBy = "vkUser")
     private Set<City> city;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String connections;
 
     @OneToMany(mappedBy = "vkUser")
@@ -59,18 +59,18 @@ public class VKUser {
     @OneToMany(mappedBy = "vkUser")
     private Set<Education> education;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String homeTown;
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String interests;
     private Integer last_seen;
 
     @OneToMany(mappedBy = "vkUser")
     private Set<Military> military;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String movies;
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String music;
 
     @OneToMany(mappedBy = "vkUser")
@@ -129,9 +129,9 @@ public class VKUser {
  3 — компромиссное;
  4 — нейтральное;
  5 — положительное.*/
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String photoId;
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String quotes;
 
     @OneToMany(mappedBy = "vkUser")
@@ -143,7 +143,7 @@ public class VKUser {
 
     private Integer sex;
     private Boolean trending; //информация о том, есть ли на странице пользователя «огонёк».
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String tv;
     private Boolean verified;
 

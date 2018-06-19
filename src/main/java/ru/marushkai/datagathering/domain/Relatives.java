@@ -26,6 +26,6 @@ public class Relatives {
 
     private Integer relativeId;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String relativeName;
 }

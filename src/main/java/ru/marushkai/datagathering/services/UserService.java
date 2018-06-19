@@ -152,6 +152,7 @@ public class UserService {
 //        }
 //    }
 
+    @Transactional
     public void saveUsers(List<String> userIds) {
         List<UserXtrCounters> users = getUserInfoById(userIds);
         users.forEach(u -> {
@@ -418,6 +419,7 @@ public class UserService {
 
 
             //Если есть copyHistory - устанавливать subscriptions по ownerId из copyHistory!
+            //FIXME: NEED TO DEBUG THIS
             List<WallPostFull> wallPosts = getUserWallPosts(user);
 
             if (wallPosts != null && !wallPosts.isEmpty() && subscriptions != null) {

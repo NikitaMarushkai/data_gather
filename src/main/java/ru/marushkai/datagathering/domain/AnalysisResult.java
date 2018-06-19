@@ -25,10 +25,10 @@ public class AnalysisResult {
 
     private Boolean isInterestedInEdu;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String knowledgeSpectre;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String nonEduInterests;
 
     private Boolean isConflict;
@@ -37,6 +37,6 @@ public class AnalysisResult {
 
     private Double readyToProvideInfo;
 
-    @Column(length = 10000)
+    @Column(columnDefinition="TEXT")
     private String quotedGroups;
 }

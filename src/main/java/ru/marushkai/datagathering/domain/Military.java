@@ -24,7 +24,7 @@ public class Military {
     @JoinColumn(name = "user_id", nullable = false)
     private VKUser vkUser;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String unit;
 
     private Integer unitId;

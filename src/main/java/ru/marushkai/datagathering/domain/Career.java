@@ -25,7 +25,7 @@ public class Career {
 
     private Integer groupId;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String company;
 
     private Integer country_id;
@@ -36,6 +36,6 @@ public class Career {
 
     private Integer year_until;
 
-    @Column(length = 5000)
+    @Column(columnDefinition="TEXT")
     private String position;
 }
