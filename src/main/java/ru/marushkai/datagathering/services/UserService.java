@@ -3,6 +3,7 @@ package ru.marushkai.datagathering.services;
 import com.vk.api.sdk.actions.Wall;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.exceptions.ApiException;
+import com.vk.api.sdk.exceptions.ApiUserDeletedException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.groups.GroupFull;
 import com.vk.api.sdk.objects.users.UserXtrCounters;
@@ -87,7 +88,11 @@ public class UserService {
                     .count(1000)
                     .execute().getItems());
         } catch (ApiException e) {
-            e.printStackTrace();
+            if (e instanceof ApiUserDeletedException) {
+                System.err.println("User was deleted or blocked");
+            } else {
+                e.printStackTrace();
+            }
         } catch (ClientException e) {
             e.printStackTrace();
         }
@@ -102,7 +107,11 @@ public class UserService {
                     .count(50)
                     .execute().getGroups());
         } catch (ApiException e) {
-            e.printStackTrace();
+            if (e instanceof ApiUserDeletedException) {
+                System.err.println("User was deleted or blocked");
+            } else {
+                e.printStackTrace();
+            }
         } catch (ClientException e) {
             e.printStackTrace();
         }
@@ -117,7 +126,11 @@ public class UserService {
                     .count(50)
                     .execute().getItems());
         } catch (ApiException e) {
-            e.printStackTrace();
+            if (e instanceof ApiUserDeletedException) {
+                System.err.println("User was deleted or blocked");
+            } else {
+                e.printStackTrace();
+            }
         } catch (ClientException e) {
             e.printStackTrace();
         }
@@ -373,6 +386,12 @@ public class UserService {
 
             List<GroupFull> userSubscription = getUserSubscriptions(user);
 
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             if (!userSubscription.isEmpty()) {
                 user.setSubscriptions(userSubscription.stream().map(subscr -> {
                     Subscriptions subscriptions = new Subscriptions();
@@ -402,7 +421,7 @@ public class UserService {
             //Если есть copyHistory - устанавливать subscriptions по ownerId из copyHistory!
             List<WallPostFull> wallPosts = getUserWallPosts(user);
 
-            if (!wallPosts.isEmpty()) {
+            if (wallPosts != null && !wallPosts.isEmpty() && subscriptions != null) {
                 user.setWallPosts(wallPosts.stream().map(post -> {
                     WallPosts wallPost = new WallPosts();
                     wallPost.setVkUser(user);
@@ -440,12 +459,14 @@ public class UserService {
             }
             result.setNonEduInterests(obviousInterests);
 
-            result.setQuotedGroups(user.getSubscriptions().stream().filter(Subscriptions::getIsQuoted).map(s -> {
-                String group = "";
-                group += "Название группы: " + s.getGroupName() + ", Статус группы: " + s.getGroupStatus() + ", " +
-                        "Описание группы: " + s.getGroupDescription() + ";";
-                return group;
-            }).collect(Collectors.joining("\n--------------\n")));
+            if (user.getSubscriptions() != null) {
+                result.setQuotedGroups(user.getSubscriptions().stream().filter(s -> (s.getIsQuoted() != null && s.getIsQuoted())).map(s -> {
+                    String group = "";
+                    group += "Название группы: " + s.getGroupName() + ", Статус группы: " + s.getGroupStatus() + ", " +
+                            "Описание группы: " + s.getGroupDescription() + ";";
+                    return group;
+                }).collect(Collectors.joining("\n--------------\n")));
+            }
 
             Set<String> eduKeywords = new HashSet<>();
             eduKeywords.add("школ");
@@ -489,39 +510,41 @@ public class UserService {
             knowledgeHumanKeywords.add("поэз");
             knowledgeHumanKeywords.add("педагог");
 
-            eduKeywords.forEach(keyword -> {
-                if (user.getWallPosts().stream()
-                        .map(WallPosts::getPostContent)
-                        .collect(Collectors.joining(";")).contains(keyword)) {
-                    result.setIsInterestedInEdu(true);
-                }
-            });
+            if (user.getWallPosts() != null) {
+                eduKeywords.forEach(keyword -> {
+                    if (user.getWallPosts().stream()
+                            .map(WallPosts::getPostContent)
+                            .collect(Collectors.joining(";")).contains(keyword)) {
+                        result.setIsInterestedInEdu(true);
+                    }
+                });
 
-            Integer techOccurences = 0;
-            for (String keyword : knowledgeTechnicalKeywords) {
-                if (user.getWallPosts().stream()
-                        .map(WallPosts::getPostContent)
-                        .collect(Collectors.joining(";")).contains(keyword)) {
-                    techOccurences++;
+                Integer techOccurences = 0;
+                for (String keyword : knowledgeTechnicalKeywords) {
+                    if (user.getWallPosts().stream()
+                            .map(WallPosts::getPostContent)
+                            .collect(Collectors.joining(";")).contains(keyword)) {
+                        techOccurences++;
+                    }
                 }
+
+                Integer humanOccurences = 0;
+                for (String keyword : knowledgeHumanKeywords) {
+                    if (user.getWallPosts().stream()
+                            .map(WallPosts::getPostContent)
+                            .collect(Collectors.joining(";")).contains(keyword)) {
+                        humanOccurences++;
+                    }
+                }
+
+                Integer totalOccurences = humanOccurences + techOccurences;
+
+                Double humanPercentage = totalOccurences > 0 ? humanOccurences / totalOccurences * 100.0 : 0;
+                Double techPercentage = totalOccurences > 0 ? techOccurences / totalOccurences * 100.0 : 0;
+
+                result.setKnowledgeSpectre("Процент технической заинтересованности: " + techPercentage + "; " +
+                        "Процент гуманитарной заинтересованности: " + humanPercentage);
             }
-
-            Integer humanOccurences = 0;
-            for (String keyword : knowledgeHumanKeywords) {
-                if (user.getWallPosts().stream()
-                        .map(WallPosts::getPostContent)
-                        .collect(Collectors.joining(";")).contains(keyword)) {
-                    humanOccurences++;
-                }
-            }
-
-            Integer totalOccurences = humanOccurences + techOccurences;
-
-            Double humanPercentage = humanOccurences / totalOccurences * 100.0;
-            Double techPercentage = techOccurences / totalOccurences * 100.0;
-
-            result.setKnowledgeSpectre("Процент технической заинтересованности: " + techPercentage + "; " +
-                    "Процент гуманитарной заинтересованности: " + humanPercentage);
             /*
             3. Заполнить конфликтность
             4. Заполнить реальный опыт
@@ -572,5 +595,10 @@ public class UserService {
                 analysisRepository.save(user.getAnalysisResult());
             }
         });
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
