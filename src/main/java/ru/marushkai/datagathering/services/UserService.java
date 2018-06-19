@@ -419,7 +419,7 @@ public class UserService {
 
 
             //Если есть copyHistory - устанавливать subscriptions по ownerId из copyHistory!
-            //FIXME: NEED TO DEBUG THIS
+            //FIXME: NEED TO DEBUG THIS?? (Maybe not...)
             List<WallPostFull> wallPosts = getUserWallPosts(user);
 
             if (wallPosts != null && !wallPosts.isEmpty() && subscriptions != null) {
@@ -444,7 +444,7 @@ public class UserService {
             //Analysis results region
             AnalysisResult result = new AnalysisResult();
             result.setVkUser(user);
-            result.setReadyToProvideInfo(fieldsFilled.doubleValue() / user.getClass().getDeclaredFields().length * 100);
+            result.setReadyToProvideInfo(fieldsFilled.doubleValue() / user.getClass().getDeclaredFields().length * 100.0);
             String obviousInterests = "";
             if (user.getMusic() != null) {
                 obviousInterests += "Музыка: " + user.getMusic() + "; ";
