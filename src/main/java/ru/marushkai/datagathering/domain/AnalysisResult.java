@@ -36,4 +36,7 @@ public class AnalysisResult {
     private Boolean realExperience;
 
     private Double readyToProvideInfo;
+
+    @Column(length = 10000)
+    private String quotedGroups;
 }

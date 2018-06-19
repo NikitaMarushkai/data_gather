@@ -6,6 +6,7 @@ import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.groups.GroupFull;
 import com.vk.api.sdk.objects.users.UserXtrCounters;
+import com.vk.api.sdk.objects.wall.WallPost;
 import com.vk.api.sdk.objects.wall.WallPostFull;
 import com.vk.api.sdk.queries.EnumParam;
 import com.vk.api.sdk.queries.groups.GroupField;
@@ -49,6 +50,12 @@ public class UserService {
     RelativesRepository relativesRepository;
     @Autowired
     SchoolsRepository schoolsRepository;
+    @Autowired
+    SubscriptionsRepository subscriptionsRepository;
+    @Autowired
+    WallPostRepository wallPostRepository;
+    @Autowired
+    AnalysisRepository analysisRepository;
 
     private List<UserXtrCounters> getUserInfoById(List<String> userIds) {
         List<UserXtrCounters> users = new ArrayList<>();
@@ -87,10 +94,25 @@ public class UserService {
         return groupFulls;
     }
 
-    private List<WallPostFull> getUserWallPosts(VKUser vkUser) {
-        List<WallPostFull> wallPostFulls = new ArrayList<>();
+    private List<GroupFull> getUserQuotedGroups(VKUser vkUser) {
+        List<GroupFull> wallPostFulls = new ArrayList<>();
         try {
             wallPostFulls.addAll(vk.wall().getExtended(VKAuthController.actor)
+                    .ownerId(vkUser.getVkId())
+                    .count(50)
+                    .execute().getGroups());
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return wallPostFulls;
+    }
+
+    private List<WallPostFull> getUserWallPosts(VKUser vkUser) {
+        List<WallPostFull> wallPosts = new ArrayList<>();
+        try {
+            wallPosts.addAll(vk.wall().get(VKAuthController.actor)
                     .ownerId(vkUser.getVkId())
                     .count(50)
                     .execute().getItems());
@@ -99,6 +121,7 @@ public class UserService {
         } catch (ClientException e) {
             e.printStackTrace();
         }
+        return wallPosts;
     }
 
 //    private Set<LikedPosts> getUserLikedPost(VKUser vkUser) {
@@ -358,12 +381,25 @@ public class UserService {
                     subscriptions.setGroupStatus(subscr.getStatus());
                     subscriptions.setGroupDescription(subscr.getDescription());
                     subscriptions.setVkUser(user);
-//                    subscriptions.set
-//                    subscriptions.setIsQuoted();
                     return subscriptions;
                 }).collect(Collectors.toSet()));
             }
 
+            List<GroupFull> quotedGroups = getUserQuotedGroups(user);
+
+            Set<Subscriptions> subscriptions = user.getSubscriptions();
+
+            if (subscriptions != null && !subscriptions.isEmpty()) {
+                subscriptions.forEach(subscr -> {
+                    if (quotedGroups.stream().map(GroupFull::getId).collect(Collectors.toSet()).contains(subscr.getGroupId())) {
+                        subscr.setIsQuoted(true);
+                    }
+                });
+                user.setSubscriptions(subscriptions);
+            }
+
+
+            //Если есть copyHistory - устанавливать subscriptions по ownerId из copyHistory!
             List<WallPostFull> wallPosts = getUserWallPosts(user);
 
             if (!wallPosts.isEmpty()) {
@@ -371,12 +407,23 @@ public class UserService {
                     WallPosts wallPost = new WallPosts();
                     wallPost.setVkUser(user);
                     wallPost.setPostContent(post.getText());
-                    post.getSignerId()
-                    wallPost.setSubscriptions(userSubscription.forEach(it -> it.getId););
-                }));
+                    if (post.getCopyHistory() != null && !post.getCopyHistory().isEmpty()){
+                        post.getCopyHistory().stream().map(WallPost::getOwnerId).forEach(id -> {
+                            if (subscriptions.stream().map(Subscriptions::getGroupId).collect(Collectors.toSet()).contains(id)) {
+                                wallPost.setSubscriptions(subscriptions.stream()
+                                        .filter(s -> s.getGroupId().equals(id))
+                                        .collect(Collectors.toList())
+                                        .get(0));
+                            }
+                        });
+                    }
+                    return wallPost;
+                }).collect(Collectors.toSet()));
             }
 
+            //Analysis results region
             AnalysisResult result = new AnalysisResult();
+            result.setVkUser(user);
             result.setReadyToProvideInfo(user.getClass().getDeclaredFields().length / fieldsFilled.doubleValue() * 100);
             String obviousInterests = "";
             if (user.getMusic() != null) {
@@ -391,7 +438,22 @@ public class UserService {
             if (user.getMovies() != null) {
                 obviousInterests += "Фильмы: " + user.getMovies() + " ;";
             }
-//            result.setNonEduInterests();
+            result.setNonEduInterests(obviousInterests);
+
+            result.setQuotedGroups(user.getSubscriptions().stream().filter(Subscriptions::getIsQuoted).map(s -> {
+                String group = "";
+                group += "Название группы: " + s.getGroupName() + ", Статус группы: " + s.getGroupStatus() + ", " +
+                        "Описание группы: " + s.getGroupDescription() + ";";
+                return group;
+            }).collect(Collectors.joining("\n--------------\n")));
+
+            /*
+            1. Заполнить заинтереcованность в образовании
+            2. Заполнить спектр знаний
+            3. Заполнить конфликтность
+            4. Заполнить реальный опыт
+             */
+            //End analysis results region
 
             vkUserRepository.save(user);
             if (user.getCareer() != null) {
@@ -426,6 +488,15 @@ public class UserService {
             }
             if (user.getSchools() != null) {
                 schoolsRepository.save(user.getSchools());
+            }
+            if (user.getSubscriptions() != null) {
+                subscriptionsRepository.save(user.getSubscriptions());
+            }
+            if (user.getWallPosts() != null) {
+                wallPostRepository.save(user.getWallPosts());
+            }
+            if (user.getAnalysisResult() != null) {
+                analysisRepository.save(user.getAnalysisResult());
             }
         });
     }
