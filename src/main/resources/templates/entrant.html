@@ -6,11 +6,112 @@
 </head>
 <body>
 
-<form th:action="@{/entrant/data}" th:method="get">
-    <label for="fio">Введите имя фамилию и отчество абитуриента, по которому нужно получить данные</label>
+<form th:action="@{/entrant/data/}" th:method="get">
+    <label for="fio">Введите имя и фамилию абитуриента, по которому нужно получить данные</label>
     <input type="text" name="fio" id="fio"/>
     <input type="submit" value="Запросить данные"/>
 </form>
+
+<!--/*@thymesVar id="entrants" type="java.util.List"*/-->
+<!--/*@thymesVar id="entrant" type="ru.marushkai.datagathering.domain.VKUser"*/-->
+<div th:if="${entrants != null}" th:object="${entrants}">
+    <div th:each="entrant : ${entrants}">
+        <p th:text="'Фамилия Имя: ' + ${entrant.firstName} + ' ' + ${entrant.lastName}"></p>
+        <p th:if="${entrant.about != null}" th:text="'Информация о себе: ' + ${entrant.about}"></p>
+        <p th:if="${entrant.activities != null}" th:text="'Занятия:  ' + ${entrant.activities}"></p>
+        <p th:if="${entrant.bdate != null}" th:text="'Дата рождения:  ' + ${entrant.bdate}"></p>
+        <div th:if="${entrant.career != null && not #lists.isEmpty(entrant.career)}">
+            <p>Опыт работы: </p>
+            <ol th:each="carr : ${entrant.career}">
+                <li th:text="'Компания: ' + ${carr.company}"></li>
+                <li th:text="'Должность: ' + ${carr.position}"></li>
+                <li th:text="'С: ' + ${carr.year_from}"></li>
+                <li th:text="'По: ' + ${carr.year_until}"></li>
+            </ol>
+        </div>
+        <div th:if="${entrant.city != null && not #lists.isEmpty(entrant.city)}">
+            <p>Город:</p>
+            <ul>
+                <li th:text="${entrant.city[0].cityName}"></li>
+            </ul>
+        </div>
+        <p th:if="${entrant.connections != null}" th:text="'Связи: ' + ${entrant.connections}"></p>
+        <p th:if="${entrant.contacts != null}"
+           th:text="'Контакты: Мобльный: ' + ${entrant.contacts[0].mobilePhone} + ', Домашний: ' + ${entrant.contacts[0].homePhone}">
+            <
+            <div th:if="${entrant.country != null && not #lists.isEmpty(entrant.country)}">
+        <p>Страна:</p>
+        <ul>
+            <li th:text="${entrant.country[0].countryName}"></li>
+        </ul>
+    </div>
+    <div th:if="${entrant.education != null && not #lists.isEmpty(entrant.career)}">
+        <p>Образование: </p>
+        <ol th:each="edu : ${entrant.education}">
+            <li th:text="'Учебное заведение: ' + ${edu.universityName}"></li>
+            <li th:text="'Факультет: ' + ${edu.facultyName}"></li>
+            <li th:text="'Год окончания: ' + ${edu.graduation}"></li>
+        </ol>
+    </div>
+    <p th:if="${entrant.homeTown != null}" th:text="'Родной город: ' + ${entrant.homeTown}"></p>
+    <p th:if="${entrant.interests != null}" th:text="'Интересы: ' + ${entrant.interests}"></p>
+    <div th:if="${entrant.military != null && not #lists.isEmpty(entrant.military)}">
+        <p>Военная служба: </p>
+        <ol th:each="mil : ${entrant.military}">
+            <li th:text="'Часть: ' + ${mil.unit}"></li>
+            <li th:text="'Год начала службы: ' + ${mil.year_from}"></li>
+            <li th:text="'Год окончания службы: ' + ${mil.year_until}"></li>
+        </ol>
+    </div>
+
+    <!--<p th:if="${entrant.occupation != null}" th:text="'Род деятельности: ' + ${entrant.occupation[0].type} + '; Название: ' + ${entrant.occupation[0].occupationName}"></p>-->
+    <div th:if="${entrant.personal != null}">
+        <ul>
+            <li th:text="'Политические взгляды: ' + ${entrant.personal.political}"></li>
+            <li th:text="'Языки: ' + ${entrant.personal.langs}"></li>
+            <li th:text="'Религиозные взгляды: ' + ${entrant.personal.religion}"></li>
+            <li th:text="'Источники вдохновения: ' + ${entrant.personal.inspiredBy}"></li>
+            <li th:text="'Главное в людях: ' + ${entrant.personal.peopleMain}"></li>
+            <li th:text="'Главное в жизни: ' + ${entrant.personal.lifeMain}"></li>
+            <li th:text="'Отношение к курению: ' + ${entrant.personal.smoking}"></li>
+            <li th:text="'Отношение к алкоголю: ' + ${entrant.personal.alcohol}"></li>
+        </ul>
+    </div>
+    <a th:if="${entrant.photoId != null}" th:href="'https://vk.com/photo' + ${entrant.photoId}">Фото пользователя</a>
+    <p th:if="${entrant.quotes != null}" th:text="'Цитаты: ' + ${entrant.quotes}"></p>
+    <div th:if="${entrant.relatives != null && not #lists.isEmpty(entrant.relatives)}">
+        <p>Родственные связи: </p>
+        <ol th:each="rel : ${entrant.relatives}">
+            <li th:text="'Имя: ' + ${rel.relativeName}"></li>
+        </ol>
+    </div>
+    <div th:if="${entrant.schools != null && not #lists.isEmpty(entrant.schools)}">
+        <p>Школы: </p>
+        <ol th:each="sch : ${entrant.schools}">
+            <li th:text="'Название школы: ' + ${sch.schoolName}"></li>
+            <li th:text="'Тип школы: ' + ${sch.type}"></li>
+            <li th:text="'Буква класса: ' + ${sch.classLetter}"></li>
+            <li th:text="'Год начала обучения: ' + ${sch.yearFrom}"></li>
+            <li th:text="'Год окончания обучения: ' + ${sch.yearTo}"></li>
+            <li th:text="'Год выпуска: ' + ${sch.yearGraduated}"></li>
+        </ol>
+    </div>
+    <p th:if="${entrant.sex != null}" th:text="'Пол: ' + ${entrant.sex}"></p>
+    <p th:if="${entrant.trending != null}" th:text="'Трендовая страничка?: ' + ${entrant.trending}"></p>
+    <p th:if="${entrant.trending != null}" th:text="'Трендовая страничка?: ' + ${entrant.trending}"></p>
+    <p th:if="${entrant.verified != null}" th:text="'Страничка подтверждена?: ' + ${entrant.verified}"></p>
+
+    <div th:if="${entrant.analysisResult != null}">
+        <ul>
+            <li th:text="'Заинтересован ли абитуриент в образовательных темах?: ' + ${entrant.analysisResult.isInterestedInEdu}"></li>
+            <li th:text="'Спектр интересов (технический\гуманитарный): ' + ${entrant.analysisResult.knowledgeSpectre}"></li>
+            <li th:text="'Вне образовательные интересы: ' + ${entrant.analysisResult.nonEduInterests}"></li>
+            <li th:text="'Есть ли у абитуриента реальный опыт работы?: ' + ${entrant.analysisResult.realExperience}"></li>
+            <li th:text="'Открытость к предоставлению информации: ' + ${entrant.analysisResult.readyToProvideInfo}"></li>
+            <li th:text="'Цитируемые сообщества: ' + ${entrant.analysisResult.quotedGroups}"></li>
+        </ul>
+    </div>
+</div>
 
 </body>
 </html>

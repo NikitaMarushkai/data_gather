@@ -20,7 +20,7 @@ public class GroupService {
     public List<String> getUserIdsFromGroup(String[] groupId) {
         List<String> members = new ArrayList<>();
         for (int j = 0; j < groupId.length; j++) {
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 20; i++) {
                 try {
                     GetMembersResponse getResponse = vk.groups().getMembers(VKAuthController.actor)
                             .groupId(groupId[j])
