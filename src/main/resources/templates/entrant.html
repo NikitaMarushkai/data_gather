@@ -36,7 +36,7 @@
             </ul>
         </div>
         <p th:if="${entrant.connections != null}" th:text="'Связи: ' + ${entrant.connections}"></p>
-        <p th:if="${entrant.contacts != null}"
+        <p th:if="${entrant.contacts != null && not #lists.isEmpty(entrant.contacts)}"
            th:text="'Контакты: Мобльный: ' + ${entrant.contacts[0].mobilePhone} + ', Домашний: ' + ${entrant.contacts[0].homePhone}">
             <
             <div th:if="${entrant.country != null && not #lists.isEmpty(entrant.country)}">
