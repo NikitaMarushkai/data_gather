@@ -143,20 +143,6 @@ public class UserService {
         return wallPosts;
     }
 
-//    private Set<LikedPosts> getUserLikedPost(VKUser vkUser) {
-////        Text text = new Text("")
-//        try {
-//            vk.fave().getPosts(VKAuthController.actor)
-//                    .count(100)
-//                    .offset(0)
-//                    .extended(true)
-//                    .execute();
-//        } catch (ApiException e) {
-//            e.printStackTrace();
-//        } catch (ClientException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     @Transactional
     public void saveUsers(List<String> userIds) {
@@ -568,10 +554,7 @@ public class UserService {
                                 "Процент гуманитарной заинтересованности: " + humanPercentage);
                     }
                     user.setAnalysisResult(result);
-            /*
-            3. Заполнить конфликтность
-            4. Заполнить реальный опыт
-             */
+
                     //End analysis results region
 
                     vkUserRepository.save(user);
